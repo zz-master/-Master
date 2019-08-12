@@ -1,0 +1,19 @@
+input[type="button"]{
+  color: #dcdfe6;
+  cursor: pointer;
+  text-align: center;
+  padding: 0 15px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+}
+
+input[type="button"]:hover{
+  border: 1px solid #409eff;
+  border-radius: 4px;
+  outline: none;
+}
+input[type="button"]:focus{
+  border: 1px solid #409eff;
+  border-radius: 4px;
+  outline: none;
+}

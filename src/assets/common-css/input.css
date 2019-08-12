@@ -1,0 +1,30 @@
+
+ 
+.input-box,
+.input-icon-box{
+  display: flex;
+}
+input[type="text"]{
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  padding: 2px 20px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus{
+  border: 1px solid #409eff;
+  border-radius: 4px;
+  outline: none;
+}
+
+input +input {
+  margin-left: 20px;
+}
+.input-icon-box +.input-icon-box,
+.input-box +.input-box{
+  margin-top: 10px;
+}

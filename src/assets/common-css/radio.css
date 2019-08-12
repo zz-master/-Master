@@ -1,0 +1,8 @@
+.checkbox-box{
+  height: 30px;
+  line-height: 30px;
+}
+.checkbox-box span{
+  font-size: 14px;
+  color: #9E9E9E;
+}
