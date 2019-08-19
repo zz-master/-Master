@@ -78,7 +78,14 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     noInfo: true,
-    overlay: true
+    overlay: true,
+    proxy: {
+      '/api/*': {
+        target: 'http://www.letclass.com',
+        changeOrigin: true,
+        pathRewrite: { '^/api': '' }
+      }
+    }
   },
   performance: {
     hints: false

@@ -11,7 +11,6 @@ export default {
   $store,
   data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
     }
   }
 }

@@ -21,6 +21,7 @@ input[type="text"]:focus{
   outline: none;
 }
 
+
 input +input {
   margin-left: 20px;
 }
