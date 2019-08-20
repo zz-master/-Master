@@ -12,7 +12,7 @@ export default new Router({
         component: Index,
         children: [
             {
-                path: '',
+                path: '/default',
                 component: Detail,
                 name: 'default'
             },

@@ -2,17 +2,18 @@
 const state = {
   userInfo: {
     id: 20,
-    nick_name: "15010626368",
+    nick_name: "",
     photo: null,
     role: 1,
     speciality: null,
-    username: "15010626368"
+    username: ""
   }
 }
 
 const mutations = {
   UPDATE_INFO(state, params) {
-    state.info = params
+    state.userInfo = Object.assign(state.userInfo, params)
+    console.warn('UPDATE_INFO', params)
   }
 }
 

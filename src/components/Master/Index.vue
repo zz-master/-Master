@@ -1,7 +1,7 @@
 <template>
   <div class="master-wapper">
     <div class="title">我的师傅</div>
-    <SelfMaster @change-list="masterDialog"></SelfMaster>
+    <SelfMaster @change-list="masterDialog" :apprenticeMaster="apprenticeMaster"></SelfMaster>
     <MasterList v-if="masterListVisable" @change-list="masterDialog"></MasterList>
   </div>
 </template>
@@ -12,7 +12,8 @@ export default {
   name: 'master-index',
   data() {
     return {
-      masterListVisable: false
+      masterListVisable: false,
+      apprenticeMaster: false
     }
   },
   components: {
@@ -20,7 +21,10 @@ export default {
     MasterList
   },
   methods: {
-    masterDialog() {
+    masterDialog(type) {
+      if (type === 'success') {
+        this.apprenticeMaster = true
+      }
       this.masterListVisable = !this.masterListVisable
     }
   }

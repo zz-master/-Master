@@ -17,6 +17,7 @@
 </template>
 <script>
 import masterService from '../../service/base.js'
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -29,7 +30,19 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapState({
+      apprenticeMaster: state => state.global.apprenticeMaster
+    }
+    )
+  },
+  watch: {
+    apprenticeMaster(newVal) {
+      this.apiGetSelfMasterList()
+    }
+  },
   mounted() {
+    console.warn('apprenticeMaster', this.apprenticeMaster)
     this.apiGetSelfMasterList()
   },
   methods: {

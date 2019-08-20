@@ -18,11 +18,21 @@
 </template>
 <script>
 import masterService from '../../service/base.js'
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      noteList: [
-      ]
+      noteList: []
+    }
+  },
+  computed: {
+    ...mapState({
+      creatNote: state => state.global.creatNote
+    })
+  },
+  watch: {
+    creatNote() {
+      this.apiGetNoteList()
     }
   },
   methods: {

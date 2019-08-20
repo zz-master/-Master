@@ -7,11 +7,12 @@ class MasterService {
   // 获取鉴权信息
   getAuthorization() {
     return {
-      'X-CSRFToken': getCookie('csrftoken')
-      // 'content-type': 'application/x-www-form-urlencoded'
+      'X-CSRFToken': getCookie('csrftoken'),
+      'content-type': 'application/x-www-form-urlencoded'
     }
   }
 
+  // 格式化数据
   postInitData(params) {
     return qs.stringify(params)
   }
@@ -54,10 +55,7 @@ class MasterService {
     let params = {
       master_id: master_id
     }
-    // return axios.post(`/api/users/user/apprentice/master/`, this.postInitData(params), {
-    //   headers: this.getAuthorization()
-    // })
-    return axios.post(`/api/users/user/apprentice/master/`, params, {
+    return axios.post(`/api/users/user/apprentice/master/`, this.postInitData(params), {
       headers: this.getAuthorization()
     })
   }

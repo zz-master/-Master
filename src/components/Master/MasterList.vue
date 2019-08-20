@@ -58,13 +58,14 @@ export default {
           return
         }
         this.handleCloseDialog()
+        this.$store.dispatch('updateMasterStatus')
       } catch (err) {
         console.warn('[api][拜师]', err)
       }
     },
     // 关闭弹窗
-    handleCloseDialog() {
-      this.$emit('change-list')
+    handleCloseDialog(type) {
+      this.$emit('change-list', type)
     },
     // 获取数据
     async apiGetAllMasterList() {

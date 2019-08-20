@@ -80,15 +80,17 @@ export default {
       }
       try {
         let { data: { code, userinfo, msg } } = await masterService.apiUserLogin(this.phone, this.code)
-        if (code !== 1000000) {
+        if (code !== 10000000) {
           throw new Error(`${msg}`)
         }
+        console.warn('[api][登录]', userinfo)
         this.$store.dispatch('updateUserInfo', userinfo)
         this.msg = '登录成功'
         this.msgType = 'success'
 
         setTimeout(() => {
           this.loginDialog = false
+          this.$router.replace({ name: 'default', query: { time: new Date().getTime() } })
         }, 500)
       } catch (err) {
         console.warn('handleLogin', err)

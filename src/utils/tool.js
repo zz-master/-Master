@@ -1,3 +1,4 @@
+// 验证手机号
 function checkPhone(tel) {
   var re = /^(((13[0-9]{1})|(15[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
 
@@ -9,7 +10,7 @@ function checkPhone(tel) {
   }
   return '请输入正确的手机号'
 }
-
+// 获取cookie
 function getCookie(name) {
   var strCookie = document.cookie
   var arrCookie = strCookie.split('; ')
