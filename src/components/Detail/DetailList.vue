@@ -2,23 +2,23 @@
   <div class="detail-list">
     <div class="detail-list-parent">
       <div class="title">{{detailParent.title}}</div>
-      <div class="text mt10">@{{detailParent.author_nickname}}</div>
+      <div class="text mt10">@{{detailParent.master_nickname}}</div>
       <div v-if="detailParent.status ===3">已解决</div>
       <div
         class="button mt10"
         v-if="detailParent.status ===2"
         @click="handleSolveNote(detailParent)"
       >解决</div>
+      <div class="button" @click="handleUpdateNote">继续提问</div>
     </div>
     <div class="text parent-text">
-      <div>{{detailParent.author_nickname}}</div>
+      <div>作者:{{detailParent.author_nickname}} 时间:{{detailParent.created}}</div>
       <div class="message mt10">{{detailParent.content}}</div>
-      <div class="button">补充</div>
     </div>
     <div class="detail-list-childs" v-show="detailChild.length >0">
       <div class="detail-item-childs" v-for="(child,index) in detailChild" :key="index">
-        <div>继续补充</div>
-        <div>{{child.content}}</div>
+        <div>作者:{{child.author_nickname}} 时间:{{child.created}}</div>
+        <div class="message mt10">{{child.content}}</div>
       </div>
     </div>
   </div>
@@ -50,20 +50,23 @@ export default {
         if (code !== 10000000) {
           return
         }
-        // this.detailChild = childs
+        this.detailChild = childs
         this.detailParent = note
       } catch (err) {
         console.warn('[api][获取问题详情]', err)
       }
     },
     async handleSolveNote(detail) {
-      console.warn('handleSolveNote', detail)
       try {
         let result = await masterService.apiSolveNote(detail.id)
-        console.warn('apiSolveNote', result)
+        this.$store.dispatch('updateSolovedNoteStatus')
+        console.warn('[api][解决问题]', result)
       } catch (err) {
-        console.warn('apiSolveNote', err)
+        console.warn('[api][解决问题]', err)
       }
+    },
+    async handleUpdateNote() {
+      this.$router.replace({ name: 'add', query: { noteId: this.noteId, time: new Date().getTime() } })
     }
   },
   mounted() {
@@ -92,12 +95,6 @@ export default {
     .message {
       text-align: left;
     }
-    .button {
-      position: absolute;
-      top: 10px;
-      right: 5px;
-      padding: 10px;
-    }
   }
   .detail-list-childs {
     .detail-item-childs {
@@ -106,6 +103,9 @@ export default {
       padding: 10px;
       border-radius: 4px;
       box-shadow: 5px 0px 16px 0px rgba(0, 0, 0, 0.07);
+    }
+    .message {
+      text-align: left;
     }
   }
 }

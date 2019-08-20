@@ -2,6 +2,16 @@ import axios from 'axios'
 import { getCookie } from '../utils/tool.js'
 import qs from 'qs'
 
+import service from './request'
+
+// getPersonInfo = data => {
+//   return service({
+//     url: '/person_pay/getpersoninfo',
+//     method: 'post',
+//     data
+//   })
+// }
+
 class MasterService {
 
   // 获取鉴权信息
@@ -12,6 +22,13 @@ class MasterService {
     }
   }
 
+  // 设置header信息
+  setHeader() {
+    return {
+      'HTTP_COOKIE': `csrftoken=${getCookie('csrftoken')};sessionid=${getCookie('sessionid')}`
+    }
+  }
+
   // 格式化数据
   postInitData(params) {
     return qs.stringify(params)
@@ -19,8 +36,14 @@ class MasterService {
 
   // 获取验证码
   apiGetCode(phone) {
-    let params = { username: phone }
-    return axios.post(`/api/users/user/sms/send/`, this.postInitData(params))
+    let data = { username: phone }
+    return service({
+      url: '/api/users/user/sms/send/',
+      method: 'post',
+      data
+    })
+    // 
+    // return axios.post(`/api/users/user/sms/send/`, this.postInitData(params))
   }
 
   // 用户登录
@@ -30,6 +53,15 @@ class MasterService {
       smscode: code
     }
     return axios.post(`/api/users/user/login/`, this.postInitData(params))
+  }
+
+  // 获取当前用户信息
+  apiGetUserInfo() {
+    return axios.get(`/api/users/user/retrieve/`,
+      {
+        headers: this.setHeader()
+      }
+    )
   }
 
   // 获取自己师傅列表

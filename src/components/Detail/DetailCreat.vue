@@ -13,6 +13,7 @@
 <script>
 import masterService from '../../service/base.js'
 export default {
+
   data() {
     return {
       title: '',
@@ -55,21 +56,23 @@ export default {
 </script>
 <style lang="scss">
 .detail-creat-wapper {
-  .special {
-    display: block;
-    height: 40px;
-    line-height: 40px;
-    padding: 2px 20px;
-    border: none;
-    border-radius: 0;
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 16px;
-    font-weight: 500;
-    &:focus {
+  .detail-title {
+    .special {
+      display: block;
+      height: 40px;
+      line-height: 40px;
+      padding: 2px 20px;
       border: none;
       border-radius: 0;
-      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 16px;
+      font-weight: 500;
+      &:focus {
+        border: none;
+        border-radius: 0;
+        outline: none;
+      }
     }
   }
   .detail-master {

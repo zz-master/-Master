@@ -27,11 +27,15 @@ export default {
   },
   computed: {
     ...mapState({
-      creatNote: state => state.global.creatNote
+      creatNote: state => state.global.creatNote,
+      solovedNote: state => state.global.solovedNote
     })
   },
   watch: {
     creatNote() {
+      this.apiGetNoteList()
+    },
+    solovedNote() {
       this.apiGetNoteList()
     }
   },

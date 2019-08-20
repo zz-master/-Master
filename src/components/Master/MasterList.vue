@@ -52,13 +52,14 @@ export default {
     // 拜师
     async handleApprenticeMaster() {
       try {
-        let { data: { code, msg } } = await masterService.apiApprenticeMaster(this.defaultId)
+        let { data: { code, msg, user_master: { master } } } = await masterService.apiApprenticeMaster(this.defaultId)
         console.warn('[api][拜师]', code, msg)
         if (code !== 10000000) {
           return
         }
         this.handleCloseDialog()
         this.$store.dispatch('updateMasterStatus')
+        // this.$router.replace({ name: 'creat', query: { masterId: master, nick_name: item.nick_name, time: new Date().getTime() } })
       } catch (err) {
         console.warn('[api][拜师]', err)
       }

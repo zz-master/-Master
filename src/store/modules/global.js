@@ -1,7 +1,9 @@
 
 const state = {
   creatNote: 0,
-  apprenticeMaster: 0
+  apprenticeMaster: 0,
+  solovedNote: 0,
+  onlineStatue: 0
 }
 
 const mutations = {
@@ -10,6 +12,12 @@ const mutations = {
   },
   UPDATE_MASTER_STATUS(state) {
     state.apprenticeMaster++
+  },
+  UPDATE_SOLOVED_NOTE_STATUS(state) {
+    state.solovedNote++
+  },
+  UPDATE_ONLINE_STATUS(state) {
+    state.onlineStatue = 1
   }
 }
 
@@ -19,6 +27,12 @@ const actions = {
   },
   updateMasterStatus({ commit }) {
     commit('UPDATE_MASTER_STATUS')
+  },
+  updateSolovedNoteStatus({ commit }) {
+    commit('UPDATE_SOLOVED_NOTE_STATUS')
+  },
+  updateonlineStatue({ commit }) {
+    commit('UPDATE_ONLINE_STATUS')
   }
 }
 

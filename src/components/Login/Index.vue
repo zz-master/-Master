@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       // 弹窗状态
-      loginDialog: true,
+      loginDialog: false,
       getCodeText: '获取验证码',
       phone: null,
       code: null,
@@ -43,7 +43,9 @@ export default {
   },
   mounted() {
     if (getCookie('csrftoken')) {
-      this.loginDialog = false
+      this.apiGetUserInfo()
+    } else {
+      this.loginDialog = true
     }
   },
   methods: {
@@ -80,7 +82,7 @@ export default {
       }
       try {
         let { data: { code, userinfo, msg } } = await masterService.apiUserLogin(this.phone, this.code)
-        if (code !== 10000000) {
+        if (code !== 1000000) {
           throw new Error(`${msg}`)
         }
         console.warn('[api][登录]', userinfo)
@@ -90,6 +92,7 @@ export default {
 
         setTimeout(() => {
           this.loginDialog = false
+          this.$store.dispatch('updateonlineStatue')
           this.$router.replace({ name: 'default', query: { time: new Date().getTime() } })
         }, 500)
       } catch (err) {
@@ -112,6 +115,16 @@ export default {
     msgInit() {
       this.msg = null
       this.msgType = 'danger'
+    },
+    async apiGetUserInfo() {
+      try {
+        let { data: { code, userinfo, msg } } = await masterService.apiGetUserInfo()
+        this.$store.dispatch('updateUserInfo', userinfo)
+        this.$store.dispatch('updateonlineStatue')
+        console.warn('[api][获取用户信息]', code, userinfo, msg)
+      } catch (err) {
+        console.warn('[api][获取用户信息]', err)
+      }
     }
   }
 }

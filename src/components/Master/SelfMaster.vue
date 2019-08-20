@@ -24,7 +24,7 @@ export default {
       list: [],
       listDeault: [
         {
-          nick_name: '12',
+          nick_name: '',
           master_id: -1
         }
       ]

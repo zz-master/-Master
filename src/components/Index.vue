@@ -1,18 +1,20 @@
 <template>
   <div class="index-wapper">
-    <div class="head-wapper">
-      <User></User>
-    </div>
-    <div class="main-wapper">
-      <div class="left-wapper">
-        <Master></Master>
-        <Note></Note>
+    <template v-if="onlineStatue">
+      <div class="head-wapper">
+        <User></User>
       </div>
-      <div class="right-wapper">
-        <router-view></router-view>
+      <div class="main-wapper">
+        <div class="left-wapper">
+          <Master></Master>
+          <Note></Note>
+        </div>
+        <div class="right-wapper">
+          <router-view></router-view>
+        </div>
       </div>
-    </div>
-    <div class="foot-wapper"></div>
+      <div class="foot-wapper"></div>
+    </template>
     <Login></Login>
   </div>
 </template>
@@ -21,9 +23,15 @@ import Login from './Login/Index.vue'
 import User from './User/Index.vue'
 import Master from './Master/Index.vue'
 import Note from './Note/Index.vue'
+import { mapState } from 'vuex'
 export default {
   data() {
     return {}
+  },
+  computed: {
+    ...mapState({
+      onlineStatue: state => state.global.onlineStatue
+    })
   },
   components: {
     User,
