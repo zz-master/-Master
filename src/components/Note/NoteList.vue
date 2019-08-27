@@ -4,7 +4,7 @@
       <div
         v-for="(note,index) in noteList"
         :key="index"
-        class="message"
+        class="note-item let-info"
         @click="handleNoteChose(note)"
       >
         <span :class="{sloved:note.status === 3,sloving:note.status === 2}"></span>
@@ -12,7 +12,7 @@
       </div>
     </template>
     <template v-else>
-      <div class="message">暂无问题</div>
+      <div class="let-info">暂无问题</div>
     </template>
   </div>
 </template>
@@ -42,14 +42,15 @@ export default {
   methods: {
     async apiGetNoteList() {
       try {
-        let { data: { code, msg, notes } } = await masterService.apiSelfNoteList()
-        console.warn('[api][获取个人问题列表]', code, notes, msg)
+        let { data: { notes } } = await masterService.apiSelfNoteList()
+        console.warn('[api][获取个人问题列表]', notes)
         this.noteList = notes
       } catch (err) {
         console.warn('[api][获取个人问题列表]', err)
       }
     },
     handleNoteChose(note) {
+      this.$store.dispatch('updateMasterChosed')
       this.$router.replace({ name: 'list', query: { noteId: note.id, time: new Date().getTime() } })
     }
   },
@@ -62,8 +63,7 @@ export default {
 .note-list-wapper {
   flex: 1;
   overflow: auto;
-  .message {
-    margin-top: 5px;
+  .note-item {
     cursor: pointer;
   }
   span {

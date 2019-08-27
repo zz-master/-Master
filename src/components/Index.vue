@@ -1,75 +1,89 @@
 <template>
-  <div class="index-wapper">
-    <template v-if="onlineStatue">
-      <div class="head-wapper">
-        <User></User>
-      </div>
-      <div class="main-wapper">
-        <div class="left-wapper">
-          <Master></Master>
-          <Note></Note>
-        </div>
-        <div class="right-wapper">
-          <router-view></router-view>
-        </div>
-      </div>
-      <div class="foot-wapper"></div>
-    </template>
-    <Login></Login>
+  <div class="let-index-wapper">
+    <User :onlineStatus="onlineStatus" @openLogin="openLogin"></User>
+    <Default v-if="isDefault"></Default>
+    <Teacher v-if="isTeacher"></Teacher>
+    <Student v-if="isStudent"></Student>
+    <Login :loginDialog="loginDialog" @openLogin="openLogin"></Login>
   </div>
 </template>
 <script>
-import Login from './Login/Index.vue'
+import Default from './Default.vue'
+import Teacher from './Teacher.vue'
+import Student from './Student.vue'
 import User from './User/Index.vue'
-import Master from './Master/Index.vue'
-import Note from './Note/Index.vue'
-import { mapState } from 'vuex'
+import Login from './Login/Index.vue'
+import { mapState, mapGetters } from 'vuex'
+import { getCookie } from '../utils/tool.js'
+import masterService from '../service/base.js'
+import Simditor from './Simditor/Index.vue'
 export default {
   data() {
-    return {}
+    return {
+      loginDialog: false
+    }
+  },
+  components: {
+    Default,
+    Teacher,
+    Student,
+    User,
+    Login
   },
   computed: {
     ...mapState({
-      onlineStatue: state => state.global.onlineStatue
-    })
+      onlineStatus: state => state.global.onlineStatus
+    }),
+    ...mapGetters(['userRole']),
+    isTeacher() {
+      return this.onlineStatus && this.userRole === 2
+    },
+    isStudent() {
+      return this.onlineStatus && this.userRole === 1
+    },
+    isDefault() {
+      return !this.onlineStatus
+    }
   },
-  components: {
-    User,
-    Master,
-    Note,
-    Login
+  watch: {
+    onlineStatus(newVal) {
+      if (!newVal) {
+        return
+      }
+      this.$router.replace({ name: 'default', query: { time: new Date().getTime() } })
+    }
+  },
+  methods: {
+    openLogin(state) {
+      this.loginDialog = state
+    },
+    isLogined() {
+      if (getCookie('csrftoken')) {
+        this.apiGetUserInfo()
+      }
+    },
+    async apiGetUserInfo() {
+      try {
+        let { data: { userinfo } } = await masterService.apiGetUserInfo()
+        this.$store.dispatch('updateUserInfo', userinfo)
+        this.$store.dispatch('updateOnlineStatus')
+        console.warn('[api][获取用户信息]', userinfo)
+      } catch (err) {
+        console.warn('[api][获取用户信息]', err)
+      }
+    }
+  },
+  mounted() {
+    this.isLogined()
+    console.warn('onlineStatus', this.onlineStatus, this.userRole)
   }
 }
 </script>
 <style lang="scss">
-.index-wapper {
+.let-index-wapper {
   width: 100%;
   height: 100%;
-  max-width: 1440px;
-  min-width: 800px;
-  margin: 0 auto;
-  .head-wapper {
-    height: 70px;
-    width: 100%;
-    border-bottom: 1px solid #e3e3e3;
-  }
-  .main-wapper {
-    width: 100%;
-    height: calc(100% - 70px);
-    display: flex;
-    .left-wapper {
-      width: 300px;
-      height: 100%;
-      padding: 10px 30px;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 5px 0px 16px 0px rgba(0, 0, 0, 0.07);
-    }
-    .right-wapper {
-      height: 100%;
-      width: calc(100% - 300px);
-    }
-  }
+  display: flex;
+  flex-direction: column;
 }
 </style>

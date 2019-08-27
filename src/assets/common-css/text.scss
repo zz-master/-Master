@@ -1,0 +1,37 @@
+.let-title{
+  font-size: $title-font-size;
+  color: $title-font-color;
+  font-weight: $title-font-weight;
+  line-height: $title-line-height;
+}
+.let-content{
+  font-size: $content-font-size;
+  color: $content-font-color;
+  font-weight: $content-font-weight;
+  line-height: $content-line-height;
+}
+.let-info{
+  font-size: $info-font-size;
+  color: $info-font-color;
+  font-weight: $info-font-weight;
+  line-height: $info-line-height;
+}
+.let-sub{
+  font-size: $sub-font-size;
+  color: $sub-font-color;
+  font-weight: $sub-font-weight;
+  line-height: $sub-line-height;
+}
+
+.let-msg-danger{
+  font-size: $sub-font-size;
+  color: $danger-color;
+  font-weight: $sub-font-weight;
+  line-height: $sub-line-height;
+}
+.let-msg-success{
+  font-size: $sub-font-size;
+  color: $success-color;
+  font-weight: $sub-font-weight;
+  line-height: $sub-line-height;
+}

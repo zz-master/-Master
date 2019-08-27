@@ -82,8 +82,7 @@ module.exports = {
     proxy: {
       '/api/*': {
         target: 'http://www.letclass.com',
-        changeOrigin: true,
-        pathRewrite: { '^/api': '' }
+        changeOrigin: true
       }
     }
   },

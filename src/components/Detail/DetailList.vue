@@ -1,30 +1,36 @@
 <template>
   <div class="detail-list">
     <div class="detail-list-parent">
-      <div class="title">{{detailParent.title}}</div>
-      <div class="text mt10">@{{detailParent.master_nickname}}</div>
-      <div v-if="detailParent.status ===3">已解决</div>
-      <div
-        class="button mt10"
-        v-if="detailParent.status ===2"
-        @click="handleSolveNote(detailParent)"
-      >解决</div>
-      <div class="button" @click="handleUpdateNote">继续提问</div>
+      <div class="let-title">{{detailParent.title}}</div>
+      <div>
+        <span class="let-info">@{{detailParent.master_nickname}}</span>
+        <button
+          class="let-button"
+          v-if="detailParent.status ===2"
+          @click="handleSolveNote(detailParent)"
+        >解决</button>
+      </div>
+      <div class="let-sub" v-if="detailParent.status ===3">已解决</div>
+      <div class="let-sub" v-if="detailParent.status ===2">未解决</div>
     </div>
     <div class="text parent-text">
-      <div>作者:{{detailParent.author_nickname}} 时间:{{detailParent.created}}</div>
-      <div class="message mt10">{{detailParent.content}}</div>
+      <div>
+        <span class="let-info">作者:{{detailParent.author_nickname}} 时间:{{detailParent.created}}</span>
+        <button class="let-button" @click="handleUpdateNote">继续提问</button>
+      </div>
+      <div class="let-content" v-html="detailParent.content"></div>
     </div>
     <div class="detail-list-childs" v-show="detailChild.length >0">
       <div class="detail-item-childs" v-for="(child,index) in detailChild" :key="index">
-        <div>作者:{{child.author_nickname}} 时间:{{child.created}}</div>
-        <div class="message mt10">{{child.content}}</div>
+        <div class="let-info">作者:{{child.author_nickname}} 时间:{{child.created}}</div>
+        <div class="let-content" v-html="child.content"></div>
       </div>
     </div>
   </div>
 </template>
 <script>
 import masterService from '../../service/base.js'
+import { mapState } from 'vuex'
 export default {
   data() {
     return {
@@ -35,10 +41,16 @@ export default {
   computed: {
     noteId() {
       return this.$route.query.noteId
-    }
+    },
+    ...mapState({
+      solovedNote: state => state.global.solovedNote
+    })
   },
   watch: {
     noteId() {
+      this.apiGetDetailList()
+    },
+    solovedNote() {
       this.apiGetDetailList()
     }
   },
@@ -47,9 +59,6 @@ export default {
       try {
         let { data: { code, note, childs } } = await masterService.apiNoteDetail(this.noteId)
         console.warn('[api][获取问题详情]', code, note, childs)
-        if (code !== 10000000) {
-          return
-        }
         this.detailChild = childs
         this.detailParent = note
       } catch (err) {
@@ -76,27 +85,22 @@ export default {
 </script>
 <style lang="scss">
 .detail-list {
-  .detail-list-parent {
-    .title {
-      height: 40px;
-      line-height: 40px;
-    }
-    .button {
-    }
-  }
+  height: 100%;
+  overflow: auto;
   .parent-text {
     border: 1px solid #cccccc;
     margin-top: 20px;
     padding: 15px;
     border-radius: 4px;
     box-shadow: 5px 0px 16px 0px rgba(0, 0, 0, 0.07);
-    padding-right: 80px;
     position: relative;
     .message {
       text-align: left;
     }
   }
   .detail-list-childs {
+    max-height: calc(100% - 180px);
+    overflow: auto;
     .detail-item-childs {
       border: 1px solid #cccccc;
       margin-top: 20px;
@@ -107,6 +111,14 @@ export default {
     .message {
       text-align: left;
     }
+  }
+  .let-button {
+    height: 24px;
+    padding: 2px 20px;
+    float: right;
+  }
+  .let-content {
+    margin-top: 5px;
   }
 }
 </style>

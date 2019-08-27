@@ -1,0 +1,36 @@
+.let-button{
+  display: inline-block;
+  height: $input-height;
+  outline: none;
+  background-color: $background-color-normal;
+  padding: 2px 10px;
+  border-radius: $border-radius;
+  border: 1px solid $border-normal-color;
+  cursor: pointer;
+  font-size: $info-font-size;
+}
+.let-button:hover{
+  background-color: $background-color-normal-hover;
+  border: 1px solid $border-normal-color;
+  color: $base-color;
+}
+
+.let-button-disable{
+  color: $base-color;
+  cursor: not-allowed;
+  background-color: $background-color-disable;
+  cursor: not-allowed;
+}
+.let-button-disable:hover,
+.let-button-disable:active{
+  color: $base-color;
+  cursor: not-allowed;
+  background-color: #c8c9cc;
+}
+
+.let-button-info:hover,
+.let-button-info:active{
+  color: #fff;
+  background-color: #909399;
+  border-color: #909399;
+}

@@ -1,11 +1,11 @@
 <template>
   <div class="self-master-wapper">
     <div
-      class="item"
-      v-for="(item,index) in list"
+      v-for="(item,index) in relMasterList"
       :key="index"
+      class="item"
+      :class="{'item-active':defaultMasterId === item.master_id}"
       @click="handleOpenList(item)"
-      :class="{mt20:index>1}"
     >
       <div class="item-normal" v-if="item.master_id !== -1">{{item.language}}:{{item.nick_name}}</div>
       <div v-else class="item-special">
@@ -21,54 +21,68 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      list: [],
-      listDeault: [
-        {
-          nick_name: '',
-          master_id: -1
-        }
-      ]
+      defaultMasterId: null,
+      defaultMasterName: null,
+      defalutList: []
+    }
+  },
+  props: {
+    myMasterList: {
+      type: Array,
+      default: []
+    }
+  },
+  watch: {
+    removeMasterChosed() {
+      this.defaultMasterId = this.$route.query.masterId
     }
   },
   computed: {
     ...mapState({
-      apprenticeMaster: state => state.global.apprenticeMaster
+      removeMasterChosed: state => state.global.removeMasterChosed
+    }),
+    relMasterList() {
+      this.initData()
+      for (let i = 0; i < this.myMasterList.length; i++) {
+        this.defalutList.splice(0, 0, this.myMasterList[i])
+        this.defalutList.pop()
+      }
+      return this.defalutList
     }
-    )
-  },
-  watch: {
-    apprenticeMaster(newVal) {
-      this.apiGetSelfMasterList()
-    }
-  },
-  mounted() {
-    console.warn('apprenticeMaster', this.apprenticeMaster)
-    this.apiGetSelfMasterList()
   },
   methods: {
     handleOpenList(item) {
       if (item.master_id && item.master_id !== -1) {
+        this.defaultMasterId = item.master_id
         this.$router.replace({ name: 'creat', query: { masterId: item.master_id, nick_name: item.nick_name, time: new Date().getTime() } })
       } else {
         this.$emit('change-list')
       }
     },
-    async apiGetSelfMasterList() {
-      try {
-        let { data: { code, masters } } = await masterService.apiGetSelfMasterList()
-        console.warn('[api][获取自己师傅列表]', code, masters)
-        this.list = masters.concat(this.listDeault)
-      } catch (err) {
-        console.warn('[api][获取自己师傅列表]', err)
-      }
+    initData() {
+      this.defalutList = [
+        {
+          nick_name: '',
+          master_id: -1,
+        },
+        {
+          nick_name: '',
+          master_id: -1,
+        },
+        {
+          nick_name: '',
+          master_id: -1,
+        }, {
+          nick_name: '',
+          master_id: -1,
+        }
+      ]
     }
   }
 }
 </script>
 <style lang="scss">
 .self-master-wapper {
-  overflow: auto;
-  height: 200px;
   .item {
     width: 100px;
     height: 60px;
@@ -77,6 +91,8 @@ export default {
     cursor: pointer;
     text-align: center;
     float: left;
+    margin: 10px 20px;
+    font-size: 12px;
     .item-normal {
       width: 100%;
       height: 100%;
@@ -110,6 +126,13 @@ export default {
     &:nth-child(2n) {
       margin-left: 20px;
     }
+  }
+  .item-active {
+    border: 1px solid #f85415;
+    color: #f85415;
+  }
+  .let-button {
+    margin-left: 20px;
   }
 }
 </style>

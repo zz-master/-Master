@@ -4,7 +4,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import '../src/assets/common-css/index.css'
+import '../src/assets/common-css/index.scss'
 
 new Vue({
   el: '#app',

@@ -1,25 +1,24 @@
 <template>
-  <div class="login-wapper" v-show="loginDialog">
-    <div class="mask"></div>
-    <div class="dialog login-dialog">
-      <div class="title login-title">@Master</div>
-      <div class="login-phone mt20">
-        <input type="text" placeholder="请输入手机号" v-model="phone" @focus="msg = null" />
+  <div class="login-wapper let-mask" v-show="loginDialog">
+    <div class="let-dialog">
+      <div class="let-dialog-close" @click="closeDialog">X</div>
+      <div class="let-title">@Master</div>
+      <div class="let-mt10">
+        <input placeholder="请输入手机号" v-model="phone" @focus="msg = null" />
       </div>
-      <div class="login-code mt20">
-        <input type="text" placeholder="请输入验证码" v-model="code" @focus="msg = null" />
+      <div class="let-mt10 login-code">
+        <input placeholder="请输入验证码" v-model="code" @focus="msg = null" />
         <button
-          class="button ml20 get-code"
-          :class="{'button-disable':!sendCode}"
-          :disabled="!sendCode"
+          class="let-button let-button-info let-ml10"
+          :class="{'let-button-disable':!sendCode}"
           @click="handleGetCode()"
         >{{getCodeText}}</button>
       </div>
       <div
-        class="message login-message"
-        :class="{danger:msgType==='danger',success:msgType==='success'}"
+        class="login-message"
+        :class="{'let-msg-danger':msgType==='danger','let-msg-success':msgType==='success'}"
       >{{msg}}</div>
-      <div class="button button-primary" @click="handleLogin">登录</div>
+      <button class="let-button" @click="handleLogin">登录</button>
     </div>
   </div>
 </template>
@@ -30,7 +29,6 @@ export default {
   data() {
     return {
       // 弹窗状态
-      loginDialog: false,
       getCodeText: '获取验证码',
       phone: null,
       code: null,
@@ -41,14 +39,16 @@ export default {
       msgType: 'danger'
     }
   },
-  mounted() {
-    if (getCookie('csrftoken')) {
-      this.apiGetUserInfo()
-    } else {
-      this.loginDialog = true
+  props: {
+    loginDialog: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
+    closeDialog() {
+      this.$emit('openLogin', false)
+    },
     async handleGetCode() {
       if (!this.sendCode) {
         return
@@ -60,10 +60,6 @@ export default {
       this.msgInit()
       try {
         let { data: { code, sms, msg } } = await masterService.apiGetCode(this.phone)
-        if (code !== 10000000) {
-          this.msg = `${msg}`
-          return
-        }
         this.sendCode = false
         this.code = sms
         this.msg = '验证码发送成功'
@@ -81,19 +77,15 @@ export default {
         return
       }
       try {
-        let { data: { code, userinfo, msg } } = await masterService.apiUserLogin(this.phone, this.code)
-        if (code !== 1000000) {
-          throw new Error(`${msg}`)
-        }
+        let { data: { userinfo } } = await masterService.apiUserLogin(this.phone, this.code)
         console.warn('[api][登录]', userinfo)
         this.$store.dispatch('updateUserInfo', userinfo)
         this.msg = '登录成功'
         this.msgType = 'success'
 
         setTimeout(() => {
-          this.loginDialog = false
-          this.$store.dispatch('updateonlineStatue')
-          this.$router.replace({ name: 'default', query: { time: new Date().getTime() } })
+          this.$store.dispatch('updateOnlineStatus')
+          this.$emit('openLogin', false)
         }, 500)
       } catch (err) {
         console.warn('handleLogin', err)
@@ -115,37 +107,28 @@ export default {
     msgInit() {
       this.msg = null
       this.msgType = 'danger'
-    },
-    async apiGetUserInfo() {
-      try {
-        let { data: { code, userinfo, msg } } = await masterService.apiGetUserInfo()
-        this.$store.dispatch('updateUserInfo', userinfo)
-        this.$store.dispatch('updateonlineStatue')
-        console.warn('[api][获取用户信息]', code, userinfo, msg)
-      } catch (err) {
-        console.warn('[api][获取用户信息]', err)
-      }
     }
   }
 }
 </script>
 <style lang="scss">
 .login-wapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  .login-dialog {
-    width: 400px;
-    height: 300px;
-    .login-title {
+  .let-dialog {
+    .let-dialog-close {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+    .let-title {
       color: #df402a;
       text-align: center;
     }
     .login-code {
       display: flex;
       flex-direction: row;
-      .get-code {
-        width: 150px;
+      .let-button-info {
+        width: 200px;
       }
     }
     .login-message {

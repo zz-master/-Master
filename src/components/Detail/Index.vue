@@ -3,7 +3,7 @@
     <DetailCreat v-if="routName === 'creat'"></DetailCreat>
     <DetailAdd v-else-if="routName === 'add'"></DetailAdd>
     <DetailList v-else-if="routName === 'list'"></DetailList>
-    <div v-else class="message">{{defaultMsg}}</div>
+    <!-- <div v-else class="message">{{defaultMsg}}</div> -->
   </div>
 </template>
 <script>
@@ -35,6 +35,7 @@ export default {
 <style lang="scss">
 .detail-wapper {
   padding: 10px;
+  height: 100%;
   .message {
     text-align: center;
   }

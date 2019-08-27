@@ -1,17 +1,20 @@
 <template>
   <div class="detail-creat-wapper">
     <div class="detail-title">
-      <input class="special" type="text" v-model="title" placeholder="请输入你的问题题目" />
+      <input class="special" type="text" v-model="title" placeholder="请输入你的问题题目" ref="noteTitle" />
     </div>
-    <div class="detail-master text">@{{nickName}}</div>
+    <div class="detail-master">
+      <span>@{{nickName}}</span>
+      <button class="let-button" @click="handleCreatNote">提交</button>
+    </div>
     <div class="detail-text">
-      <textarea name id cols="30" rows="10" v-model="content"></textarea>
+      <Simditor @change="change"></Simditor>
     </div>
-    <div class="button" @click="handleCreatNote">提交</div>
   </div>
 </template>
 <script>
 import masterService from '../../service/base.js'
+import Simditor from '../Simditor/Index.vue'
 export default {
 
   data() {
@@ -20,6 +23,9 @@ export default {
       content: ''
     }
   },
+  components: {
+    Simditor
+  },
   computed: {
     masterId() {
       return this.$route.query.masterId
@@ -27,6 +33,9 @@ export default {
     nickName() {
       return this.$route.query.nick_name
     }
+  },
+  mounted() {
+    this.$refs.noteTitle.focus()
   },
   methods: {
     async handleCreatNote() {
@@ -42,14 +51,16 @@ export default {
       try {
         let { data: { code, note, msg } } = await masterService.apiCreatNote(params)
         console.warn('[api][创建帖子]', code, note, msg)
-        if (code !== 10000000) {
-          return
-        }
         this.$store.dispatch('updateNoteStatus')
+        this.$store.dispatch('updateMasterStatus')
         this.$router.replace({ name: 'list', query: { noteId: note.id, time: new Date().getTime() } })
       } catch (err) {
         console.warn('apiCreatNote', err)
       }
+    },
+    change(val) {
+      console.warn(val)
+      this.content = val
     }
   }
 }
@@ -59,15 +70,19 @@ export default {
   .detail-title {
     .special {
       display: block;
-      height: 40px;
-      line-height: 40px;
+      height: 60px;
+      line-height: 60px;
       padding: 2px 20px;
       border: none;
       border-radius: 0;
       width: 100%;
       box-sizing: border-box;
-      font-size: 16px;
+      font-size: 24px;
       font-weight: 500;
+      &::placeholder {
+        color: rgba(0, 0, 0, 0.4);
+        font-size: 24px;
+      }
       &:focus {
         border: none;
         border-radius: 0;
@@ -76,16 +91,19 @@ export default {
     }
   }
   .detail-master {
-    padding-left: 20px;
-    margin-top: 20px;
-  }
-  .detail-text {
-    padding-left: 20px;
-    margin-top: 20px;
-  }
-  .button {
     margin-left: 20px;
     margin-top: 20px;
+    height: 30px;
+    line-height: 30px;
+  }
+  .detail-text {
+    margin-left: 20px;
+    margin-top: 20px;
+  }
+  .let-button {
+    height: 30px;
+    padding: 2px 20px;
+    float: right;
   }
 }
 </style>

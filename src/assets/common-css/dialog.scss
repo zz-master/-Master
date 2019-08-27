@@ -1,0 +1,18 @@
+.let-dialog{
+  width: 30%;
+  height: 40%;
+  min-height: 300px;
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+  padding: 0 30px;
+  border-radius: $border-radius;
+  background: $base-color;
+  transform: translate(-50%,-50%);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}

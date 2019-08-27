@@ -1,11 +1,11 @@
 <template>
   <div class="note-wapper">
     <NoteList></NoteList>
-    <div class="message">
+    <div class="let-info">
       <span class="sloved"></span> 已解决
     </div>
-    <div class="message">
-      <span class="sloving"></span>进行中
+    <div class="let-info">
+      <span class="sloving"></span> 进行中
     </div>
   </div>
 </template>
@@ -22,12 +22,11 @@ export default {
 </script>
 <style lang="scss">
 .note-wapper {
-  height: calc(100% - 240px);
+  height: calc(100% - 220px);
   padding: 10px 0;
   border-top: 1px solid #d5d5d5;
   display: flex;
   flex-direction: column;
-  margin-top: 30px;
   .title {
     font-weight: 400;
   }

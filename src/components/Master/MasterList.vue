@@ -1,11 +1,8 @@
 <template>
-  <div class="master-list-wapper">
-    <div class="mask"></div>
-    <div class="dialog master-dialog">
-      <div class="title master-title">
-        @Master
-        <span class="dialog-close" @click="handleCloseDialog()">X</span>
-      </div>
+  <div class="master-list-wapper let-mask">
+    <div class="let-dialog">
+      <div class="let-dialog-close" @click="closeDialog">X</div>
+      <div class="let-title">@Master</div>
       <div class="master-main">
         <div class="master-list" v-for="(item,index) in masterList" :key="index">
           <div class="title">{{item.language}}</div>
@@ -20,8 +17,12 @@
           </div>
           <div class="info-list" v-for="(master,key1) in item.masters" :key="key1">
             <div v-show="defaultId === master.id" class="master-info">
-              <div class="text master-speciality" v-html="master.speciality"></div>
-              <div class="button master-button" @click="handleApprenticeMaster">拜师</div>
+              <div class="text master-speciality" v-html="master.speciality ||defaultText"></div>
+              <button
+                class="let-button"
+                v-show="!isApprenticed(master.id)"
+                @click="handleApprenticeMaster"
+              >拜师</button>
             </div>
           </div>
         </div>
@@ -35,13 +36,26 @@ export default {
   data() {
     return {
       masterList: [],
-      defaultId: null
+      defaultId: null,
+      defaultText: '该老师无简介'
+    }
+  },
+  props: {
+    myMastersIdList: {
+      type: Array,
+      default: []
     }
   },
   mounted() {
     this.apiGetAllMasterList()
   },
   methods: {
+    closeDialog() {
+      this.$emit('change-list', false)
+    },
+    isApprenticed(masterId) {
+      return this.myMastersIdList.includes(masterId)
+    },
     // 选择老师
     handleChoseMaster(master) {
       if (this.defaultId === master.id) {
@@ -52,29 +66,24 @@ export default {
     // 拜师
     async handleApprenticeMaster() {
       try {
-        let { data: { code, msg, user_master: { master } } } = await masterService.apiApprenticeMaster(this.defaultId)
-        console.warn('[api][拜师]', code, msg)
-        if (code !== 10000000) {
-          return
-        }
-        this.handleCloseDialog()
+        let { data: { code, msg, user_master: { master, master_nickname } } } = await masterService.apiApprenticeMaster(this.defaultId)
+        console.warn('[api][拜师]', master)
+        this.handleCloseDialog(false)
         this.$store.dispatch('updateMasterStatus')
-        // this.$router.replace({ name: 'creat', query: { masterId: master, nick_name: item.nick_name, time: new Date().getTime() } })
+        this.$store.dispatch('updateMasterChosed')
+        this.$router.replace({ name: 'creat', query: { masterId: master, nick_name: master_nickname, time: new Date().getTime() } })
       } catch (err) {
         console.warn('[api][拜师]', err)
       }
     },
     // 关闭弹窗
-    handleCloseDialog(type) {
-      this.$emit('change-list', type)
+    handleCloseDialog(type = false) {
+      this.$emit('change-list')
     },
     // 获取数据
     async apiGetAllMasterList() {
       try {
         let { data: { code, result, msg } } = await masterService.apiGetAllMasterList()
-        if (code !== 10000000) {
-          return
-        }
         this.masterList = result
         console.warn('[api][获取全部老师列表]', code, result, msg)
       } catch (err) {
@@ -86,24 +95,22 @@ export default {
 </script>
 <style lang="scss">
 .master-list-wapper {
-  .master-dialog {
+  .let-dialog {
     width: 800px;
     height: 500px;
     padding: 0;
     justify-content: flex-start;
-  }
-  .master-title {
-    height: 50px;
-    line-height: 50px;
-    color: #df402a;
-    text-align: center;
-    border-bottom: 1px solid #e3e3e3;
-    position: relative;
-    box-sizing: border-box;
-    .dialog-close {
+    .let-dialog-close {
       position: absolute;
+      top: 10px;
       right: 10px;
       cursor: pointer;
+    }
+    .let-title {
+      color: #df402a;
+      text-align: center;
+      height: 50px;
+      line-height: 50px;
     }
   }
   .master-main {
@@ -131,8 +138,8 @@ export default {
           margin-left: 15px;
         }
         .master-active {
-          border: 1px solid#DCDFE6;
-          background: #dcdfe6;
+          border: 1px solid#f85415;
+          color: #f85415;
         }
       }
       .info-list {
@@ -140,12 +147,13 @@ export default {
           height: 150px;
           overflow: auto;
           border: 1px dashed #606266;
+          padding: 10px;
           .master-speciality {
             padding: 5px;
           }
-          .master-button {
-            margin-top: 20px;
-            margin-left: 20px;
+          .let-button {
+            height: 30px;
+            padding: 2px 20px;
           }
         }
       }

@@ -1,20 +1,28 @@
 <template>
   <div class="detail-add">
-    <div class="button" @click="handleUpdate">提交</div>
-    <textarea name id cols="30" rows="10" v-model="content"></textarea>
+    <div class="let-title">{{detailParent.title}}</div>
+    <button class="let-button" @click="handleUpdate">提交</button>
+    <Simditor @change="change"></Simditor>
     <div class="detail-add-parent">
-      <div class="message">{{detailParent.content}}</div>
+      <div class="message">
+        <div class="let-info">作者:{{detailParent.author_nickname}} 时间:{{detailParent.created}}</div>
+        <div class="let-content" v-html="detailParent.content"></div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import masterService from '../../service/base.js'
+import Simditor from '../Simditor/Index.vue'
 export default {
   data() {
     return {
       content: '',
       detailParent: {}
     }
+  },
+  components: {
+    Simditor
   },
   mounted() {
     this.apiGetDetailList()
@@ -25,19 +33,23 @@ export default {
     }
   },
   methods: {
+    change(val) {
+      console.warn(val)
+      this.content = val
+    },
     async apiGetDetailList() {
       try {
         let { data: { code, note, childs } } = await masterService.apiNoteDetail(this.noteId)
         console.warn('[api][获取问题详情]', code, note, childs)
-        if (code !== 10000000) {
-          return
-        }
         this.detailParent = note
       } catch (err) {
         console.warn('[api][获取问题详情]', err)
       }
     },
     async handleUpdate() {
+      if (!this.content) {
+        return
+      }
       try {
         let params = {
           title: '',
@@ -57,7 +69,22 @@ export default {
 </script>
 <style lang="scss">
 .detail-add {
-  .button {
+  position: relative;
+  .let-title {
+    margin-bottom: 10px;
+  }
+  .let-button {
+    position: absolute;
+    height: 24px;
+    padding: 2px 20px;
+    top: 2px;
+    right: 10px;
+  }
+  .let-content {
+    margin-top: 5px;
+  }
+  textarea {
+    margin-top: 10px;
   }
   .detail-add-parent {
     border: 1px solid #cccccc;
