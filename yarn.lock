@@ -1583,6 +1583,10 @@ domain-browser@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"
 
+dompurify@^1.0.8:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-1.0.11.tgz#fe0f4a40d147f7cebbe31a50a1357539cfc1eb4d"
+
 ecc-jsbn@~0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz#3a83a904e54353287874c564b7549386849a98c9"
@@ -4297,10 +4301,11 @@ signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-simditor@^2.3.19:
-  version "2.3.19"
-  resolved "https://registry.yarnpkg.com/simditor/-/simditor-2.3.19.tgz#cb98bf3b0031710218e2238f41fd4b24f61c044d"
+simditor@^2.3.22:
+  version "2.3.22"
+  resolved "https://registry.yarnpkg.com/simditor/-/simditor-2.3.22.tgz#952b3d697fb334a363c02613e78774e9d1257189"
   dependencies:
+    dompurify "^1.0.8"
     jquery "~2.1.4"
     simple-hotkeys "~1.0.3"
     simple-module "~2.0.6"
